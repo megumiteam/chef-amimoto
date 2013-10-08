@@ -160,7 +160,7 @@ template "/etc/nginx/nginx.conf" do
 	source "nginx.conf.erb"
 end
 
-%w{ drop expires "mobile-detect" phpmyadmin "wp-multisite-subdir" "wp-singlesite" }.each do | file_name |
+%w{ drop expires mobile-detect phpmyadmin wp-multisite-subdir wp-singlesite }.each do | file_name |
 	template "/etc/nginx/" + file_name do
 		source file_name + ".erb"
 	end
