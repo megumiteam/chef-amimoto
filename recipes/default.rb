@@ -58,7 +58,7 @@ else
 	mysql_thread_cache = "128"
 end
 
-%w{ memcached zip unzip wget iptables }.each do | pkg |
+%w{ memcached zip unzip wget iptables git }.each do | pkg |
 	package pkg do
 		action [:install, :upgrade]
 	end
@@ -186,3 +186,29 @@ end
 service "php-fpm" do
 	action [:enable, :restart]
 end
+
+# install wp-cli
+directory node[:wp-cli][:wpcli-dir] do
+	recursive true
+end
+
+remote_file "#{node[:wp-cli][:wpcli-dir]}/installer.sh" do
+	source 'http://wp-cli.org/installer.sh'
+	mode 0755
+	action :create_if_missing
+end
+
+bin = ::File.join(node[:wp-cli][:wpcli-dir], 'bin', 'wp')
+
+bash 'install wp-cli' do
+	code './installer.sh'
+	cwd node[:wp-cli][:wpcli-dir]
+	environment 'INSTALL_DIR' => node[:wp-cli][:wpcli-dir],
+	            'VERSION' => node[:wp-cli][:wpcli-version]
+	creates bin
+end
+
+link node['wp-cli']['wpcli-link'] do
+	to bin
+end
+
