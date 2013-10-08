@@ -42,14 +42,37 @@ end
 case instance_type
 when "t1.micro"
 	nginx_worker_processes = "2"
+	php_max_children = "5"
+	php_start_servers = "1"
+	php_min_spare_servers = "1"
+	php_max_spare_servers = "4"
+	php_max_requests = "200"
 	mysql_innodb_buffer_pool_size = "64M"
 	mysql_query_cache_size = "64M"
 	mysql_tmp_table_size = "64M"
 	mysql_tmp_table_size = "64M"
 	mysql_max_connections = "128"
 	mysql_thread_cache = "128"
+when "m1.large"
+	nginx_worker_processes = "4"
+	php_max_children = "5"
+	php_start_servers = "1"
+	php_min_spare_servers = "1"
+	php_max_spare_servers = "4"
+	php_max_requests = "200"
+	mysql_innodb_buffer_pool_size = "128M"
+	mysql_query_cache_size = "128M"
+	mysql_tmp_table_size = "128M"
+	mysql_tmp_table_size = "128M"
+	mysql_max_connections = "128"
+	mysql_thread_cache = "128"
 else
 	nginx_worker_processes = "2"
+	php_max_children = "5"
+	php_start_servers = "1"
+	php_min_spare_servers = "1"
+	php_max_spare_servers = "4"
+	php_max_requests = "200"
 	mysql_innodb_buffer_pool_size = "64M"
 	mysql_query_cache_size = "64M"
 	mysql_tmp_table_size = "64M"
@@ -137,6 +160,21 @@ template "/etc/nginx/nginx.conf" do
 	source "nginx.conf.erb"
 end
 
+%w{ drop expires "mobile-detect" phpmyadmin "wp-multisite-subdir" "wp-singlesite" }.each do | file_name |
+	template "/etc/nginx/" + file_name do
+		source file_name + ".erb"
+	end
+end
+
+%w{ default.conf default.backend.conf }.each do | file_name |
+	template "/etc/nginx/conf.d/" + file_name do
+		variables(
+			:server_naem => "default"
+		)
+		source file_name + ".erb"
+	end
+end
+
 %w{ /var/cache/nginx /var/log/nginx }.each do | dir_name |
 	directory dir_name do
 		owner node[:nginx][:user]
@@ -170,6 +208,13 @@ template "/etc/php-fpm.conf" do
 end
 
 template "/etc/php-fpm.d/www.conf" do
+	variables(
+		:max_children => php_max_children,
+		:start_servers => php_start_servers,
+		:min_spare_servers => php_min_spare_servers,
+		:max_spare_servers => php_max_spare_servers,
+		:max_requests => php_max_requests
+	)
 	source "www.conf.erb"
 end
 
