@@ -1,0 +1,188 @@
+#
+# Cookbook Name:: amimoto
+# Recipe:: default
+#
+# Copyright 2013, DigitalCube Co. Ltd.
+#
+# All rights reserved - Do Not Redistribute
+#
+instance_type = node[:ec2][:instance_type]
+
+case node[:ec2][:placement_availability_zone]
+when "eu-west-1a", "eu-west-1b", "eu-west-1c"
+	region   = "eu-west-1"
+	timezone = "WET"
+when "sa-east-1a", "sa-east-1b"
+	region   = "sa-east-1"
+	timezone = "America/Sao_Paulo"
+when "us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1e"
+	region   = "us-east-1"
+	timezone = "US/Eastern"
+when "ap-northeast-1a", "ap-northeast-1b", "ap-northeast-1c"
+	region   = "ap-northeast-1"
+	timezone = "Asia/Tokyo"
+when "us-west-2a", "us-west-2b", "us-west-2c"
+	region   = "us-west-2"
+	timezone = "US/Pacific"
+when "us-west-1a", "us-west-1b", "us-west-1c"
+	region   = "us-west-1"
+	timezone = "US/Pacific"
+when "ap-southeast-1a", "ap-southeast-1b"
+	region   = "ap-southeast-1"
+	timezone = "Asia/Singapore"
+else
+	region   = "unknown"
+	timezone = "UTC"
+end
+
+link "/etc/localtime" do
+	to "/usr/share/zoneinfo/" + timezone
+end
+
+case instance_type
+when "t1.micro"
+	nginx_worker_processes = "2"
+	mysql_innodb_buffer_pool_size = "64M"
+	mysql_query_cache_size = "64M"
+	mysql_tmp_table_size = "64M"
+	mysql_tmp_table_size = "64M"
+	mysql_max_connections = "128"
+	mysql_thread_cache = "128"
+else
+	nginx_worker_processes = "2"
+	mysql_innodb_buffer_pool_size = "64M"
+	mysql_query_cache_size = "64M"
+	mysql_tmp_table_size = "64M"
+	mysql_tmp_table_size = "64M"
+	mysql_max_connections = "128"
+	mysql_thread_cache = "128"
+end
+
+%w{ memcached zip unzip wget iptables }.each do | pkg |
+	package pkg do
+		action [:install, :upgrade]
+	end
+end
+
+# Percona install
+cookbook_file "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm" do
+  source "percona-release-0.0-1.x86_64.rpm"
+end
+package "percona-release" do
+  source "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm"
+  action :install
+  provider Chef::Provider::Package::Rpm
+end
+%w{ Percona-Server-server-55 Percona-Server-client-55 Percona-Server-shared-compat }.each do |package_name|
+	package package_name do
+		action [:install, :upgrade]
+	end
+end
+
+# nginx install
+service "httpd" do
+	action [:stop, :disable]
+end
+package "nginx" do
+	action [:install, :upgrade]
+end
+
+# php54 install
+%w{ php54 php54-cli php54-fpm php54-devel php54-mbstring php54-gd php-pear php54-xml php54-mcrypt php54-mysqlnd php54-pdo php54-pecl-apc php54-pecl-memcache }.each do | pkg |
+	package pkg do
+		action [:install, :upgrade]
+	end
+end
+
+# nginx install
+service "httpd" do
+	action [:stop, :disable]
+end
+
+package "nginx" do
+	action [:install, :upgrade]
+end
+
+# configure mysql
+service "mysql" do
+	action :stop
+end
+
+%w{ ib_logfile0 ib_logfile1 }.each do | file_name |
+	file "/var/lib/mysql/" + file_name do
+		action :delete
+	end
+end
+
+template "/etc/my.cnf" do
+	variables(
+		:innodb_buffer_pool_size => mysql_innodb_buffer_pool_size,
+		:query_cache_size => mysql_query_cache_size,
+		:tmp_table_size => mysql_tmp_table_size,
+		:max_connections => mysql_max_connections,
+		:thread_cache => mysql_thread_cache
+	)
+	source "my.cnf.erb"
+end
+
+service "mysql" do
+	action [:enable, :start]
+end
+
+# configure nginx
+template "/etc/nginx/nginx.conf" do
+	variables(
+		:worker_processes => nginx_worker_processes
+	)
+	source "nginx.conf.erb"
+end
+
+%w{ /var/cache/nginx /var/log/nginx }.each do | dir_name |
+	directory dir_name do
+		owner node[:nginx][:user]
+		group node[:nginx][:group]
+		mode 00644
+		recursive true
+		action :create
+	end
+end
+
+service "nginx" do
+	action [:enable, :restart]
+end
+
+# configure php
+%w{ apc.ini memcache.ini }.each do | file_name |
+	template "/etc/php.d/" + file_name do
+		source file_name + ".erb"
+	end
+end
+
+template "/etc/php.ini" do
+	variables(
+		:timezone => timezone
+	)
+	source "php.ini.erb"
+end
+
+template "/etc/php-fpm.conf" do
+	source "php-fpm.conf.erb"
+end
+
+template "/etc/php-fpm.d/www.conf" do
+	source "www.conf.erb"
+end
+
+%w{ /var/tmp/php/session /var/log/php-fpm }.each do | dir_name |
+	directory dir_name do
+		owner node[:php][:user]
+		group node[:php][:group]
+		mode 00644
+		recursive true
+		action :create
+	end
+end
+
+service "php-fpm" do
+	action [:enable, :restart]
+end
