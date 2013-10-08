@@ -188,27 +188,27 @@ service "php-fpm" do
 end
 
 # install wp-cli
-directory node[:wp-cli][:wpcli-dir] do
+directory node[:wpcli][:dir] do
 	recursive true
 end
 
-remote_file "#{node[:wp-cli][:wpcli-dir]}/installer.sh" do
+remote_file "#{node[:wpcli][:dir]}/installer.sh" do
 	source 'http://wp-cli.org/installer.sh'
 	mode 0755
 	action :create_if_missing
 end
 
-bin = ::File.join(node[:wp-cli][:wpcli-dir], 'bin', 'wp')
+bin = ::File.join(node[:wpcli][:dir], 'bin', 'wp')
 
 bash 'install wp-cli' do
 	code './installer.sh'
-	cwd node[:wp-cli][:wpcli-dir]
-	environment 'INSTALL_DIR' => node[:wp-cli][:wpcli-dir],
-	            'VERSION' => node[:wp-cli][:wpcli-version]
+	cwd node[:wpcli][:dir]
+	environment 'INSTALL_DIR' => node[:wpcli][:dir],
+	            'VERSION' => node[:wpcli][:version]
 	creates bin
 end
 
-link node['wp-cli']['wpcli-link'] do
+link node[:wpcli][:link] do
 	to bin
 end
 
