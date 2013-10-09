@@ -16,7 +16,7 @@ default[:php][:config][:max_requests] = '200'
 default[:mysql][:config][:user] = 'mysql'
 default[:mysql][:config][:innodb_buffer_pool_size] = '64M'
 default[:mysql][:config][:query_cache_size] = '64M'
-default[:mysql][:config][:tmp_table_size] => '64M'
+default[:mysql][:config][:tmp_table_size]  = '64M'
 default[:mysql][:config][:max_connections] = '128'
 default[:mysql][:config][:thread_cache] = '128'
 
@@ -35,7 +35,7 @@ when "t1.micro"
   ## MySQL
   default[:mysql][:config][:innodb_buffer_pool_size] = '64M'
   default[:mysql][:config][:query_cache_size] = '64M'
-  default[:mysql][:config][:tmp_table_size] => '64M'
+  default[:mysql][:config][:tmp_table_size]  = '64M'
   default[:mysql][:config][:max_connections] = '128'
   default[:mysql][:config][:thread_cache] = '128'
 when "m1.large"
@@ -52,7 +52,7 @@ when "m1.large"
   ## MySQL
   default[:mysql][:config][:innodb_buffer_pool_size] = '128M'
   default[:mysql][:config][:query_cache_size] = '128M'
-  default[:mysql][:config][:tmp_table_size] => '128M'
+  default[:mysql][:config][:tmp_table_size]  = '128M'
   default[:mysql][:config][:max_connections] = '128'
   default[:mysql][:config][:thread_cache] = '128'
 end
