@@ -1,5 +1,6 @@
 require 'serverspec'
 require 'pathname'
+require 'ohai'
 
 include Serverspec::Helper::Exec
 include Serverspec::Helper::DetectOS
@@ -13,3 +14,7 @@ RSpec.configure do |c|
   end
   c.formatter = :documentation
 end
+
+ohai = Ohai::System.new
+ohai.all_plugins
+@@ohaidata = ohai.data
