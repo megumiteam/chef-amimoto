@@ -12,7 +12,6 @@ include_recipe 'amimoto::timezone'
 
 case instance_type
 when "t1.micro"
-	nginx_worker_processes = "2"
 	php_max_children = "5"
 	php_start_servers = "1"
 	php_min_spare_servers = "1"
@@ -25,7 +24,6 @@ when "t1.micro"
 	mysql_max_connections = "128"
 	mysql_thread_cache = "128"
 when "m1.large"
-	nginx_worker_processes = "4"
 	php_max_children = "5"
 	php_start_servers = "1"
 	php_min_spare_servers = "1"
@@ -38,7 +36,6 @@ when "m1.large"
 	mysql_max_connections = "128"
 	mysql_thread_cache = "128"
 else
-	nginx_worker_processes = "2"
 	php_max_children = "5"
 	php_start_servers = "1"
 	php_min_spare_servers = "1"
@@ -125,9 +122,7 @@ end
 
 # configure nginx
 template "/etc/nginx/nginx.conf" do
-	variables(
-		:worker_processes => nginx_worker_processes
-	)
+	variables node[:nginx][:config]
 	source "nginx.conf.erb"
 end
 
@@ -140,7 +135,11 @@ end
 %w{ default.conf default.backend.conf }.each do | file_name |
 	template "/etc/nginx/conf.d/" + file_name do
 		variables(
+<<<<<<< HEAD
 			:server_naem => node[:ec2][:instance_id]
+=======
+			:server_name => "default"
+>>>>>>> d1cf6492afc4528708371d9c6f0458b9007199ef
 		)
 		source file_name + ".erb"
 	end

@@ -1,4 +1,4 @@
-user              <%= node['nginx']['user'] %> <%= node['nginx']['group'] %>;
+user              <%= @user %> <%= @group %>;
 worker_processes  <%= @worker_processes %>;
 
 error_log  /var/log/nginx/error.log warn;
