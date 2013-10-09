@@ -29,5 +29,5 @@ platforms:
 
 suites:
 - name: amimoto
-  run_list: ["recipe[amimoto]"]
+  run_list: ["recipe[amimoto::default]"]
   attributes: {}
