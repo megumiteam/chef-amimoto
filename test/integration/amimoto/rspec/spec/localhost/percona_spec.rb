@@ -2,8 +2,9 @@ require 'spec_helper'
 
 ## Repo Percona
 
-describe file('/etc/yum.repos.d/Percona.repo') do
-  it { should be_file }
+describe yumrepo('percona') do
+  it { should exist }
+  it { should be_enabled }
 end
 
 describe command('mysqladmin ping') do
