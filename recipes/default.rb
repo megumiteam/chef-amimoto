@@ -140,7 +140,7 @@ end
 %w{ default.conf default.backend.conf }.each do | file_name |
 	template "/etc/nginx/conf.d/" + file_name do
 		variables(
-			:server_naem => "default"
+			:server_naem => node[:ec2][:instance_id]
 		)
 		source file_name + ".erb"
 	end
@@ -168,9 +168,6 @@ end
 end
 
 template "/etc/php.ini" do
-	variables(
-		:timezone => node[:timezone]
-	)
 	source "php.ini.erb"
 end
 
