@@ -55,15 +55,6 @@ end
   end
 end
 
-# nginx install
-service "httpd" do
-  action [:stop, :disable]
-end
-
-package "nginx" do
-  action [:install, :upgrade]
-end
-
 # configure mysql
 include_recipe 'amimoto::mysql'
 
