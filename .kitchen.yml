@@ -1,0 +1,23 @@
+---
+driver_plugin: ec2
+driver_config:
+  require_chef_omnibus: true
+  aws_access_key_id: PLEASE_OVERWRITE_BY_.kitchen.local.yml
+  aws_secret_access_key: PLEASE_OVERWRITE_BY_.kitchen.local.yml
+  aws_ssh_key_id: PLEASE_OVERWRITE_BY_.kitchen.local.yml
+  ssh_key: PLEASE_OVERWRITE_BY_.kitchen.local.yml
+
+platforms:
+- name: amazon-linux
+  driver_config:
+    image_id: ami-3561fe34
+    username: ec2-user
+    region: ap-northeast-1
+    availability_zone: ap-northeast-1a
+    tags:
+      Name: test-kitchen
+
+suites:
+- name: amimoto
+  run_list: ["recipe[amimoto]"]
+  attributes: {}
