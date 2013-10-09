@@ -175,11 +175,11 @@ end
 	end
 end
 
-%w{ /var/cache/nginx /var/log/nginx }.each do | dir_name |
+%w{ /var/cache/nginx /var/log/nginx /var/www/vhosts }.each do | dir_name |
 	directory dir_name do
 		owner node[:nginx][:user]
 		group node[:nginx][:group]
-		mode 00644
+		mode 00755
 		recursive true
 		action :create
 	end
@@ -222,7 +222,7 @@ end
 	directory dir_name do
 		owner node[:php][:user]
 		group node[:php][:group]
-		mode 00644
+		mode 00755
 		recursive true
 		action :create
 	end
