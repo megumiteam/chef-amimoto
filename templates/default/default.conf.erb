@@ -1,12 +1,12 @@
 server {
     listen      80 default;
     server_name _;
-    root        /var/www/vhosts/<%= @server_naem %>;
+    root        /var/www/vhosts/<%= @server_name %>;
     index       index.html index.htm;
     charset     utf-8;
 
-    access_log  /var/log/nginx/<%= @server_naem %>.access.log  main;
-    error_log   /var/log/nginx/<%= @server_naem %>.error.log;
+    access_log  /var/log/nginx/<%= @server_name %>.access.log  main;
+    error_log   /var/log/nginx/<%= @server_name %>.error.log;
 
     include     /etc/nginx/drop;
 
