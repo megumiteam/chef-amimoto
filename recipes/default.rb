@@ -8,36 +8,7 @@
 #
 instance_type = node[:ec2][:instance_type]
 
-case node[:ec2][:placement_availability_zone]
-when "eu-west-1a", "eu-west-1b", "eu-west-1c"
-	region   = "eu-west-1"
-	timezone = "WET"
-when "sa-east-1a", "sa-east-1b"
-	region   = "sa-east-1"
-	timezone = "America/Sao_Paulo"
-when "us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1e"
-	region   = "us-east-1"
-	timezone = "US/Eastern"
-when "ap-northeast-1a", "ap-northeast-1b", "ap-northeast-1c"
-	region   = "ap-northeast-1"
-	timezone = "Asia/Tokyo"
-when "us-west-2a", "us-west-2b", "us-west-2c"
-	region   = "us-west-2"
-	timezone = "US/Pacific"
-when "us-west-1a", "us-west-1b", "us-west-1c"
-	region   = "us-west-1"
-	timezone = "US/Pacific"
-when "ap-southeast-1a", "ap-southeast-1b"
-	region   = "ap-southeast-1"
-	timezone = "Asia/Singapore"
-else
-	region   = "unknown"
-	timezone = "UTC"
-end
-
-link "/etc/localtime" do
-	to "/usr/share/zoneinfo/" + timezone
-end
+include_recipe 'amimoto::timezone'
 
 case instance_type
 when "t1.micro"
@@ -198,7 +169,7 @@ end
 
 template "/etc/php.ini" do
 	variables(
-		:timezone => timezone
+		:timezone => node[:timezone]
 	)
 	source "php.ini.erb"
 end

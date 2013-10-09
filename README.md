@@ -1,55 +1,68 @@
 amimoto Cookbook
 ================
-TODO: Enter the cookbook description here.
 
-e.g.
-This cookbook makes your favorite breakfast sandwhich.
+
 
 Requirements
 ------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
-
-e.g.
-#### packages
-- `toaster` - amimoto needs toaster to brown your bagel.
 
 Attributes
 ----------
-TODO: List you cookbook attributes here.
-
-e.g.
-#### amimoto::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['amimoto']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
 
 Usage
 -----
-#### amimoto::default
-TODO: Write usage instructions for each cookbook.
 
-e.g.
-Just include `amimoto` in your node's `run_list`:
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[amimoto]"
-  ]
-}
+Test
+----
+
+### Setup
+
+
 ```
+gem install bundler
+bundle
+```
+
+### Configuration
+
+Create .kitchen.local.yml. This file will override credincial settings.
+
+!! Don't add.kitchen.local.yml to git !!
+
+```
+---
+driver_plugin: ec2
+driver_config:
+  aws_access_key_id: YOUR_AWS_KEY
+  aws_secret_access_key: YOUR_AWS_SECRET
+  aws_ssh_key_id: SSH_KEY_NAME_OF_NEW_INSTANCE
+  ssh_key: FULL_PATH_TO_KEY
+```
+
+
+### Test
+
+
+```
+# to create instance
+
+kitchen create
+
+# to run chef
+
+kitchen converge
+
+# to run serverspec
+
+kitchen verify
+
+# terminate instance
+
+kitchen destroy
+```
+
+
 
 Contributing
 ------------
