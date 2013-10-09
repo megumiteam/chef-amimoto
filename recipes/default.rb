@@ -8,21 +8,32 @@
 #
 include_recipe 'amimoto::timezone'
 
-%w{ memcached zip unzip wget iptables git }.each do | pkg |
+%w{ zip unzip wget iptables git }.each do | pkg |
   package pkg do
     action [:install, :upgrade]
   end
+end
+
+# memcached install
+package 'memcached' do
+  action [:install, :upgrade]
+end
+
+service 'memcached' do
+  action node[:memcached][:service_action]
 end
 
 # Percona install
 cookbook_file "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm" do
   source "percona-release-0.0-1.x86_64.rpm"
 end
+
 package "percona-release" do
   source "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm"
   action :install
   provider Chef::Provider::Package::Rpm
 end
+
 %w{ Percona-Server-server-55 Percona-Server-client-55 Percona-Server-shared-compat }.each do |package_name|
   package package_name do
     action [:install, :upgrade]

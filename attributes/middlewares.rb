@@ -1,3 +1,6 @@
+## memcached
+default[:memcached][:service_action] = [:enable, :start]
+
 ## Nginx
 default[:nginx][:config][:user] = 'nginx'
 default[:nginx][:config][:group] = 'nginx'
@@ -22,6 +25,9 @@ default[:mysql][:config][:thread_cache] = '128'
 
 case node[:ec2][:instance_type]
 when "t1.micro"
+  ## memcached
+  default[:memcached][:service_action] = [:stop, :disable]
+
   ## Nginx
   default[:nginx][:config][:worker_processes] = '2'
 
