@@ -65,24 +65,8 @@ package "nginx" do
 end
 
 # configure mysql
-service "mysql" do
-  action :stop
-end
+include_recipe 'amimoto::mysql'
 
-%w{ ib_logfile0 ib_logfile1 }.each do | file_name |
-  file "/var/lib/mysql/" + file_name do
-    action :delete
-  end
-end
-
-template "/etc/my.cnf" do
-  variables node[:mysql][:config]
-  source "my.cnf.erb"
-end
-
-service "mysql" do
-  action [:enable, :start]
-end
 
 # configure nginx
 template "/etc/nginx/nginx.conf" do
