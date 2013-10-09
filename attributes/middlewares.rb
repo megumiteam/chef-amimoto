@@ -18,6 +18,7 @@ default[:php][:config][:max_requests] = '200'
 ## MySQL
 default[:mysql][:config][:user] = 'mysql'
 default[:mysql][:config][:innodb_buffer_pool_size] = '64M'
+default[:mysql][:config][:innodb_log_file_size] = '16M'
 default[:mysql][:config][:query_cache_size] = '64M'
 default[:mysql][:config][:tmp_table_size]  = '64M'
 default[:mysql][:config][:max_connections] = '128'
