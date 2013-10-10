@@ -7,6 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 include_recipe 'amimoto::timezone'
+template "/etc/sysconfig/i18n" do
+  source "i18n.erb"
+end
 
 %w{ zip unzip wget iptables git }.each do | pkg |
   package pkg do
@@ -62,13 +65,13 @@ include_recipe 'amimoto::mysql'
 # configure nginx
 template "/etc/nginx/nginx.conf" do
   variables node[:nginx][:config]
-  source "nginx.conf.erb"
+  source "nginx-nginx.conf.erb"
   notifies :reload, 'service[nginx]'
 end
 
 %w{ drop expires mobile-detect phpmyadmin wp-multisite-subdir wp-singlesite }.each do | file_name |
   template "/etc/nginx/" + file_name do
-    source file_name + ".erb"
+    source "nginx-" + file_name + ".erb"
     notifies :reload, 'service[nginx]'
   end
 end
@@ -78,7 +81,7 @@ end
     variables(
       :server_name => node[:ec2][:instance_id]
     )
-    source file_name + ".erb"
+    source "nginx-" + file_name + ".erb"
     notifies :reload, 'service[nginx]'
   end
 end
@@ -100,24 +103,24 @@ end
 # configure php
 %w{ apc.ini memcache.ini }.each do | file_name |
   template "/etc/php.d/" + file_name do
-    source file_name + ".erb"
+    source "php-" + file_name + ".erb"
     notifies :reload, 'service[php-fpm]'
   end
 end
 
 template "/etc/php.ini" do
-  source "php.ini.erb"
+  source "php-php.ini.erb"
     notifies :reload, 'service[php-fpm]'
 end
 
 template "/etc/php-fpm.conf" do
-  source "php-fpm.conf.erb"
+  source "php-php-fpm.conf.erb"
     notifies :reload, 'service[php-fpm]'
 end
 
 template "/etc/php-fpm.d/www.conf" do
   variables node[:php][:config]
-  source "www.conf.erb"
+  source "php-www.conf.erb"
   notifies :reload, 'service[php-fpm]'
 end
 

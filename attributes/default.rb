@@ -1,3 +1,10 @@
 default[:wpcli][:dir] = '/usr/share/wp-cli'
 default[:wpcli][:version] = '@stable'
 default[:wpcli][:link] = '/usr/bin/wp'
+
+default[:sysconfig][:lang] = 'en.UTF-8'
+default[:sysconfig][:sysfont] = 'latarcyrheb-sun16'
+case node[:ec2][:region]
+when 'ap-northeast-1'
+  default[:sysconfig][:lang] = 'ja_JP.UTF-8'
+end
