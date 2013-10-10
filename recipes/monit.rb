@@ -11,6 +11,7 @@ template node[:monit][:config_file] do
   source 'monit/monit.conf.erb'
   variables node[:monit][:config]
   notifies :restart, 'service[monit]'
+  mode '0600'
 end
 
 node[:monit][:settings][:processes].each do |monit|
