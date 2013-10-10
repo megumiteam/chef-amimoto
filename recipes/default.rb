@@ -101,21 +101,11 @@ service "nginx" do
 end
 
 # configure php
-%w{ apc.ini memcache.ini }.each do | file_name |
-  template "/etc/php.d/" + file_name do
-    source "php/php.d/" + file_name + ".erb"
+%w{ php.ini php-fpm.conf php.d/apc.ini php.d/memcache.ini }.each do | file_name |
+  template "/etc/" + file_name do
+    source "php/" + file_name + ".erb"
     notifies :reload, 'service[php-fpm]'
   end
-end
-
-template "/etc/php.ini" do
-  source "php/php.ini.erb"
-    notifies :reload, 'service[php-fpm]'
-end
-
-template "/etc/php-fpm.conf" do
-  source "php/php-fpm.conf.erb"
-    notifies :reload, 'service[php-fpm]'
 end
 
 template "/etc/php-fpm.d/www.conf" do
