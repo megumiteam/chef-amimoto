@@ -1,4 +1,3 @@
-require 'active_support/core_ext/numeric/bytes'
 include Chef::Mixin::ShellOut
 
 ## returns mysql parameter
@@ -13,10 +12,14 @@ def to_mysql_bytes(str)
   case str[-1].downcase
   when 'k'
     str.to_i.kilobytes.to_s
+    ret = str.to_i * 1024
+    ret.to_s
   when 'm'
-    str.to_i.megabytes.to_s
+    ret = str.to_i * 1024 * 1024
+    ret.to_s
   when 'g'
-    str.to_i.gigabytes.to_s
+    ret = str.to_i * 1024 * 1024 * 1024
+    ret.to_s
   else
     str
   end
