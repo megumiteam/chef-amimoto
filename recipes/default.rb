@@ -63,11 +63,13 @@ include_recipe 'amimoto::mysql'
 template "/etc/nginx/nginx.conf" do
   variables node[:nginx][:config]
   source "nginx.conf.erb"
+  notifies :reload, 'service[nginx]'
 end
 
 %w{ drop expires mobile-detect phpmyadmin wp-multisite-subdir wp-singlesite }.each do | file_name |
   template "/etc/nginx/" + file_name do
     source file_name + ".erb"
+    notifies :reload, 'service[nginx]'
   end
 end
 
@@ -77,6 +79,7 @@ end
       :server_name => node[:ec2][:instance_id]
     )
     source file_name + ".erb"
+    notifies :reload, 'service[nginx]'
   end
 end
 
@@ -91,27 +94,31 @@ end
 end
 
 service "nginx" do
-  action [:enable, :restart]
+  action [:enable, :start]
 end
 
 # configure php
 %w{ apc.ini memcache.ini }.each do | file_name |
   template "/etc/php.d/" + file_name do
     source file_name + ".erb"
+    notifies :reload, 'service[php-fpm]'
   end
 end
 
 template "/etc/php.ini" do
   source "php.ini.erb"
+    notifies :reload, 'service[php-fpm]'
 end
 
 template "/etc/php-fpm.conf" do
   source "php-fpm.conf.erb"
+    notifies :reload, 'service[php-fpm]'
 end
 
 template "/etc/php-fpm.d/www.conf" do
   variables node[:php][:config]
   source "www.conf.erb"
+  notifies :reload, 'service[php-fpm]'
 end
 
 %w{ /var/tmp/php/session /var/log/php-fpm }.each do | dir_name |
@@ -125,7 +132,7 @@ end
 end
 
 service "php-fpm" do
-  action [:enable, :restart]
+  action [:enable, :start]
 end
 
 # install wp-cli
