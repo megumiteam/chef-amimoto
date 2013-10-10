@@ -7,6 +7,12 @@ directory '/var/run/mysqld' do
   group 'mysql'
 end
 
+template "/etc/my.cnf" do
+  variables node[:mysql][:config]
+  source "mysql/my.cnf.erb"
+  notifies :reload, 'service[mysql]' unless node.run_state[:mysql_flush_ib_logfiles]
+end
+
 service "mysql" do
   action [:enable, :start]
 end
@@ -20,11 +26,6 @@ unless current_innodb_log_file_size == new_innodb_log_file_size
   node.run_state[:mysql_flush_ib_logfiles] = true
 end
 
-template "/etc/my.cnf" do
-  variables node[:mysql][:config]
-  source "mysql/my.cnf.erb"
-  notifies :reload, 'service[mysql]' unless node.run_state[:mysql_flush_ib_logfiles]
-end
 
 ## restart with flush innodb_log_files
 
