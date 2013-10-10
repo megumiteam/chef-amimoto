@@ -13,6 +13,7 @@ RSpec.configure do |c|
     c.sudo_password = ENV['SUDO_PASSWORD']
   end
   c.formatter = :documentation
+  ENV['LANG'] = 'C'
 end
 
 ohai = Ohai::System.new
