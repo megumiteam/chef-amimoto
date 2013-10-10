@@ -10,7 +10,7 @@ ruby_block 'sysctl tuning' do
     file.insert_line_if_no_match(/vm\.swappiness/, 'vm.swappiness=0')
     file.write_file
   end
-  notifies :run, 'execute[reload sysctl]'
+  notifies :run, 'execute[reload sysctl]', :immediately
   not_if 'grep swappiness /etc/sysctl.conf'
 end
 
