@@ -11,5 +11,29 @@ default[:monit][:settings][:processes] = [
    :rules => [
      'if failed port 80 then restart'
    ]
-  }
+  },
+  {
+   :name => 'php-fpm',
+   :pidfile => '/var/run/php-fpm/php-fpm.pid',
+   :start => '/sbin/service php-fpm start',
+   :stop  => '/sbin/service php-fpm stop',
+   :rules => [
+   ]
+  },
+  {
+   :name => 'mysql',
+   :pidfile => '/var/run/mysqld/mysqld.pid',
+   :start => '/sbin/service mysql start',
+   :stop  => '/sbin/service mysql stop',
+   :rules => [
+   ]
+  },
+  {
+   :name => 'crond',
+   :pidfile => '/var/run/crond.pid',
+   :start => '/sbin/service crond start',
+   :stop  => '/sbin/service crond stop',
+   :rules => [
+   ]
+  },
 ]

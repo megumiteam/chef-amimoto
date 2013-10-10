@@ -1,4 +1,12 @@
 # configure mysql
+
+directory '/var/run/mysqld' do
+  action :create
+  mode '0700'
+  owner 'mysql'
+  group 'mysql'
+end
+
 service "mysql" do
   action [:enable, :start]
 end
