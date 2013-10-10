@@ -7,6 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 include_recipe 'amimoto::timezone'
+include_recipe 'amimoto::sysctl'
 template "/etc/sysconfig/i18n" do
   source "i18n.erb"
 end
