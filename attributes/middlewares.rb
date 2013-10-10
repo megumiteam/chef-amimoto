@@ -5,6 +5,8 @@ default[:memcached][:service_action] = [:enable, :start]
 default[:nginx][:config][:user] = 'nginx'
 default[:nginx][:config][:group] = 'nginx'
 default[:nginx][:config][:worker_processes] = '2'
+default[:nginx][:config][:client_max_body_size] = '4M'
+default[:nginx][:config][:proxy_read_timeout] = '90'
 
 ## PHP
 default[:php][:config][:user] = 'nginx'
@@ -14,6 +16,10 @@ default[:php][:config][:start_servers] = '1'
 default[:php][:config][:min_spare_servers] = '1'
 default[:php][:config][:max_spare_servers] = '4'
 default[:php][:config][:max_requests] = '200'
+default[:php][:config][:upload_max_filesize] = node[:nginx][:config][:client_max_body_size]
+default[:php][:config][:post_max_size] = node[:php][:config][:upload_max_filesize]
+default[:php][:config][:request_terminate_timeout] = node[:nginx][:config][:proxy_read_timeout]
+default[:php][:config][:max_execution_time] = node[:nginx][:config][:proxy_read_timeout]
 
 ## MySQL
 default[:mysql][:config][:user] = 'mysql'

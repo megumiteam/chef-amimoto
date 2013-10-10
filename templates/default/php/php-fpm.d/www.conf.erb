@@ -17,13 +17,13 @@ pm.max_requests = <%= @max_requests %>
 rlimit_files = 131072
 rlimit_core = unlimited
 
-request_terminate_timeout = 90
+request_terminate_timeout = <%= @request_terminate_timeout %>
 request_slowlog_timeout = 60
 
 slowlog = /var/log/php-fpm/www-slow.log
 
 php_admin_value[error_log] = /var/log/php-fpm/www-error.log
 php_admin_flag[log_errors] = on
-php_admin_value[upload_max_filesize] = 4M
-php_admin_value[post_max_size] = 4M
-php_admin_value[max_execution_time] = 60
+php_admin_value[upload_max_filesize] = <%= @upload_max_filesize %>
+php_admin_value[post_max_size] = <%= @post_max_size %>
+php_admin_value[max_execution_time] = <%= @max_execution_time %>
