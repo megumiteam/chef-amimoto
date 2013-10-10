@@ -6,3 +6,12 @@ require 'spec_helper'
   end
 end
 
+describe file('/etc/my.cnf') do
+  it { should be_file }
+  case @@ohaidata[:ec2][:instance_type]
+  when 't1.micro'
+    it { should contain /^\s*innodb_buffer_pool_size\s*=\s*64M/ }
+  when 'm1.large'
+    it { should contain /^\s*innodb_buffer_pool_size\s*=\s*256M/ }
+  end
+end
