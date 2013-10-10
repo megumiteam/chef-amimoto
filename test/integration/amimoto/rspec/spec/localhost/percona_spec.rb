@@ -14,3 +14,9 @@ end
 describe command('mysqld -V') do
   it { should return_stdout /Percona\ Server/ }
 end
+
+describe service('mysql') do
+  it { should be_enabled }
+  it { should be_running }
+  it { should be_monitored_by('monit') }
+end
