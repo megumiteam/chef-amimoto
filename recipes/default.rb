@@ -163,3 +163,4 @@ link node[:wpcli][:link] do
   to bin
 end
 
+include_recipe 'amimoto::monit'
