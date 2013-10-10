@@ -14,7 +14,7 @@ end
 
 template "/etc/my.cnf" do
   variables node[:mysql][:config]
-  source "mysql-my.cnf.erb"
+  source "mysql/my.cnf.erb"
   notifies :reload, 'service[mysql]' unless node.run_state[:mysql_flush_ib_logfiles]
 end
 
