@@ -9,7 +9,6 @@ default[:monit][:settings][:processes] = [
    :start => '/sbin/service nginx start',
    :stop  => '/sbin/service nginx stop',
    :rules => [
-     'if failed port 80 then restart'
    ]
   },
   {
