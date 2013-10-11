@@ -62,96 +62,14 @@ end
 # configure mysql
 include_recipe 'amimoto::mysql'
 
-
 # configure nginx
-template "/etc/nginx/nginx.conf" do
-  variables node[:nginx][:config]
-  source "nginx/nginx.conf.erb"
-  notifies :reload, 'service[nginx]'
-end
-
-%w{ drop expires mobile-detect phpmyadmin wp-multisite-subdir wp-singlesite }.each do | file_name |
-  template "/etc/nginx/" + file_name do
-    source "nginx/" + file_name + ".erb"
-    notifies :reload, 'service[nginx]'
-  end
-end
-
-%w{ default.conf default.backend.conf }.each do | file_name |
-  template "/etc/nginx/conf.d/" + file_name do
-    variables(
-      :server_name => node[:ec2][:instance_id]
-    )
-    source "nginx/conf.d/" + file_name + ".erb"
-    notifies :reload, 'service[nginx]'
-  end
-end
-
-%W{ /var/cache/nginx /var/log/nginx /var/www/vhosts/#{node[:ec2][:instance_id]} }.each do | dir_name |
-  directory dir_name do
-    owner node[:nginx][:config][:user]
-    group node[:nginx][:config][:group]
-    mode 00755
-    recursive true
-    action :create
-  end
-end
-
-service "nginx" do
-  action [:enable, :start]
-end
+include_recipe 'amimoto::nginx'
 
 # configure php
-%w{ php.ini php-fpm.conf php.d/apc.ini php.d/memcache.ini }.each do | file_name |
-  template "/etc/" + file_name do
-    source "php/" + file_name + ".erb"
-    notifies :reload, 'service[php-fpm]'
-  end
-end
-
-template "/etc/php-fpm.d/www.conf" do
-  variables node[:php][:config]
-  source "php/php-fpm.d/www.conf.erb"
-  notifies :reload, 'service[php-fpm]'
-end
-
-%w{ /var/tmp/php/session /var/log/php-fpm }.each do | dir_name |
-  directory dir_name do
-    owner node[:php][:config][:user]
-    group node[:php][:config][:group]
-    mode 00755
-    recursive true
-    action :create
-  end
-end
-
-service "php-fpm" do
-  action [:enable, :start]
-end
+include_recipe 'amimoto::php'
 
 # install wp-cli
-directory node[:wpcli][:dir] do
-  recursive true
-end
+include_recipe 'amimoto::wpcli'
 
-remote_file "#{node[:wpcli][:dir]}/installer.sh" do
-  source 'http://wp-cli.org/installer.sh'
-  mode 0755
-  action :create_if_missing
-end
-
-bin = ::File.join(node[:wpcli][:dir], 'bin', 'wp')
-
-bash 'install wp-cli' do
-  code './installer.sh'
-  cwd node[:wpcli][:dir]
-  environment 'INSTALL_DIR' => node[:wpcli][:dir],
-              'VERSION' => node[:wpcli][:version]
-  creates bin
-end
-
-link node[:wpcli][:link] do
-  to bin
-end
-
+# install monit
 include_recipe 'amimoto::monit'
