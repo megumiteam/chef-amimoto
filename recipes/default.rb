@@ -6,6 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+include_recipe 'amimoto::ohai'
 include_recipe 'amimoto::timezone'
 include_recipe 'amimoto::sysctl'
 template "/etc/sysconfig/i18n" do
