@@ -8,6 +8,7 @@
 #
 include_recipe 'amimoto::timezone'
 include_recipe 'amimoto::sysctl'
+include_recipe 'amimoto::repos'
 template "/etc/sysconfig/i18n" do
   source "i18n.erb"
 end
@@ -36,11 +37,21 @@ package "percona-release" do
   source "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm"
   action :install
   provider Chef::Provider::Package::Rpm
+  ignore_failure true
 end
 
-%w{ Percona-Server-server-55 Percona-Server-client-55 Percona-Server-shared-compat }.each do |package_name|
-  package package_name do
-    action [:install, :upgrade]
+if ['redhat'].include?(node[:platform])
+  %w{ Percona-Server-server-55 Percona-Server-client-55 }.each do |package_name|
+    yum_package package_name do
+      action [:install, :upgrade]
+      flush_cache [:before]
+    end
+  end
+else
+  %w{ Percona-Server-server-55 Percona-Server-client-55 Percona-Server-shared-compat }.each do |package_name|
+    package package_name do
+      action [:install, :upgrade]
+    end
   end
 end
 

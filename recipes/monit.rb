@@ -1,5 +1,13 @@
-package 'monit' do
-  action [:install, :upgrade]
+if %w(redhat).include?(node[:platform])
+  yum_package 'monit' do
+    action [:install, :upgrade]
+    options '--enablerepo=rpmforge'
+    flush_cache [:before]
+  end
+else
+  package 'monit' do
+    action [:install, :upgrade]
+  end
 end
 
 service 'monit' do

@@ -14,6 +14,4 @@ ruby_block 'sysctl tuning' do
   not_if 'grep swappiness /etc/sysctl.conf'
 end
 
-if ['redhat'].include?(node[:platform])
-  mount_swap_file
-end
+mount_swap_file
