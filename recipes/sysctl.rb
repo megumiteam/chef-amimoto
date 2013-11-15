@@ -14,3 +14,4 @@ ruby_block 'sysctl tuning' do
   not_if 'grep swappiness /etc/sysctl.conf'
 end
 
+mount_swap_file
