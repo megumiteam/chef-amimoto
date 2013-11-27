@@ -16,3 +16,10 @@ mount "/var/www/vhosts/#{node[:ec2][:instance_id]}" do
   options "rw"
 end
 
+mount "/var/cache/nginx/proxy_cache" do
+  action [:mount, :enable]
+  device "#{master_ip}:/var/cache/nginx/proxy_cache"
+  fstype "nfs"
+  options "rw"
+end
+
