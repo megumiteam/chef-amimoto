@@ -19,7 +19,7 @@ end
 
 
 template '/opt/aws/nfs_client.rb' do
-  source 'cfn/nfs_client.rb'
+  source 'cfn/nfs_client.rb.erb'
 end
 
 rc_line = '/usr/bin/chef-apply /opt/aws/nfs_client.rb > /dev/null 2>&1'
