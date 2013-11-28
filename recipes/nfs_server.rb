@@ -1,9 +1,3 @@
-%w(portmap nfs-utils nfs-utils-lib).each do |pkg|
-  package pkg do
-    action [:install, :upgrade]
-  end
-end
-
 nginx_uid = `id -u nginx`.chomp
 nginx_gid = `id -g nginx`.chomp
 
