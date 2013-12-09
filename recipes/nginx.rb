@@ -33,6 +33,10 @@ end
   end
 end
 
+template "/var/www/vhosts/" + node[:ec2][:instance_id] + "/index.html" do
+  source "nginx/index.html.erb"
+end
+
 service "nginx" do
   action [:enable, :start]
 end
