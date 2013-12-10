@@ -7,6 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 include_recipe 'amimoto::timezone'
+include_recipe 'amimoto::iptables'
 include_recipe 'amimoto::sysctl'
 include_recipe 'amimoto::repos'
 template "/etc/sysconfig/i18n" do
