@@ -203,7 +203,8 @@ when "m3.large"
   default[:mysql][:config][:query_cache_size] = '256M'
   default[:mysql][:config][:tmp_table_size]  = '256M'
   default[:mysql][:config][:max_connections] = '256'
-  default[:mysql][:config][:thread_cache] = '256'when "m3.xlarge"
+  default[:mysql][:config][:thread_cache] = '256'
+when "m3.xlarge"
   ## Nginx
   default[:nginx][:config][:worker_processes] = '4'
 
