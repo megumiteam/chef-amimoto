@@ -80,8 +80,8 @@ include_recipe 'amimoto::nginx'
 # configure php
 include_recipe 'amimoto::php'
 
-# install wp-cli
-include_recipe 'amimoto::wpcli'
-
 # install monit
 include_recipe 'amimoto::monit'
+
+# install wp-cli
+include_recipe 'amimoto::wpcli'
