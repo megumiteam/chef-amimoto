@@ -42,4 +42,12 @@ suites:
     - recipe[amimoto::default]
     - recipe[amimoto::report_handler]
   attributes: {}
+#- name: amimoto-nfs
+#  run_list:
+#    - recipe[amimoto::default]
+#    - recipe[testmoto::default]
+#    - recipe[amimoto::report_handler]
+#  attributes: {}
 
+busser:
+  sudo: true

@@ -1,5 +1,5 @@
 require 'serverspec'
-require 'pathname'
+$LOAD_PATH.concat Dir.glob('/opt/chef/embedded/lib/ruby/gems/1.9.1/gems/*/lib')
 require 'ohai'
 
 include Serverspec::Helper::Exec
@@ -17,5 +17,8 @@ RSpec.configure do |c|
 end
 
 ohai = Ohai::System.new
+ohai.hints = {"ec2"=>{}}
 ohai.all_plugins
-@@ohaidata = ohai.data
+$ohaidata = ohai.data
+
+

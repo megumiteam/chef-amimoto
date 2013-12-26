@@ -1,7 +1,8 @@
+require ::File.expand_path('../../spec_helper', __FILE__)
 
 describe file('/etc/php-fpm.d/www.conf') do
   it { should be_file }
-  case @@ohaidata[:ec2][:instance_type]
+  case $ohaidata[:ec2][:instance_type]
   when 't1.micro'
     it { should contain /^\s*pm.max_children\s*=\s5/ }
   when 'm1.large'

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require ::File.expand_path('../../spec_helper', __FILE__)
 
 describe command('wp --version') do
   it { should return_exit_status 0 }

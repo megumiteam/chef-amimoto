@@ -1,4 +1,4 @@
-require 'spec_helper'
+require ::File.expand_path('../../spec_helper', __FILE__)
 
 describe service('iptables') do
   it { should_not be_enabled }

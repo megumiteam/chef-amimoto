@@ -1,4 +1,4 @@
-require 'spec_helper'
+require ::File.expand_path('../../spec_helper', __FILE__)
 
 describe service('httpd') do
   it { should_not be_enabled }
@@ -19,7 +19,7 @@ end
 
 describe file('/etc/nginx/nginx.conf') do
   it { should be_file }
-  case @@ohaidata[:ec2][:instance_type]
+  case $ohaidata[:ec2][:instance_type]
   when 't1.micro'
     it { should contain /^\s*worker_processes\s*2/ }
   when 'm1.large'
@@ -27,7 +27,7 @@ describe file('/etc/nginx/nginx.conf') do
   end
 end
 
-describe file("/var/www/vhosts/#{@@ohaidata[:ec2][:instance_id]}") do
+describe file("/var/www/vhosts/#{$ohaidata[:ec2][:instance_id]}") do
   it { should be_directory }
 end
 
