@@ -1,3 +1,11 @@
+# php54 install
+
+node[:php][:packages].each do | pkg |
+  package pkg do
+    action [:install, :upgrade]
+  end
+end
+
 # configure php
 
 %w{ php.ini php-fpm.conf php.d/apc.ini php.d/memcache.ini }.each do | file_name |
@@ -24,5 +32,5 @@ end
 end
 
 service "php-fpm" do
-  action [:enable, :start]
+  action node[:php][:service_action]
 end

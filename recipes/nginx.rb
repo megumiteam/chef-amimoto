@@ -1,3 +1,14 @@
+# nginx install
+
+service "httpd" do
+  action [:stop, :disable]
+end
+node[:nginx][:packages].each do | pkg |
+  package pkg do
+    action [:install, :upgrade]
+  end
+end
+
 # configure nginx
 
 template "/etc/nginx/nginx.conf" do
@@ -38,5 +49,5 @@ template "/var/www/vhosts/" + node[:ec2][:instance_id] + "/index.html" do
 end
 
 service "nginx" do
-  action [:enable, :start]
+  action node[:nginx][:service_action]
 end

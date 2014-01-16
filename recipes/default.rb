@@ -14,70 +14,26 @@ template "/etc/sysconfig/i18n" do
   source "i18n.erb"
 end
 
-%w{ zip unzip wget iptables git }.each do | pkg |
+%w{ zip unzip wget git }.each do | pkg |
   package pkg do
     action [:install, :upgrade]
   end
 end
 
 # memcached install
-package 'memcached' do
-  action [:install, :upgrade]
-end
-
-service 'memcached' do
-  action node[:memcached][:service_action]
-end
-
-# Percona install
-cookbook_file "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm" do
-  source "percona-release-0.0-1.x86_64.rpm"
-end
-
-package "percona-release" do
-  source "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm"
-  action :install
-  provider Chef::Provider::Package::Rpm
-  ignore_failure true
-end
-
-if ['redhat'].include?(node[:platform])
-  %w{ Percona-Server-server-55 Percona-Server-client-55 }.each do |package_name|
-    yum_package package_name do
-      action [:install, :upgrade]
-      flush_cache [:before]
-    end
-  end
-else
-  %w{ Percona-Server-server-55 Percona-Server-client-55 Percona-Server-shared-compat }.each do |package_name|
-    package package_name do
-      action [:install, :upgrade]
-    end
-  end
-end
-
-# nginx install
-service "httpd" do
-  action [:stop, :disable]
-end
-package "nginx" do
-  action [:install, :upgrade]
-end
-
-# php54 install
-%w{ php54 php54-cli php54-fpm php54-devel php54-mbstring php54-gd php-pear php54-xml php54-mcrypt php54-mysqlnd php54-pdo php54-pecl-apc php54-pecl-memcache }.each do | pkg |
+node[:memcached][:packages].each do | pkg |
   package pkg do
     action [:install, :upgrade]
   end
 end
 
-# configure mysql
+# install mysql
 include_recipe 'amimoto::mysql'
 
-# configure nginx
+# install nginx
 include_recipe 'amimoto::nginx'
 
-# configure php
+# install php
 include_recipe 'amimoto::php'
 
 # install monit

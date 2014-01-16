@@ -1,7 +1,10 @@
 ## memcached
+default[:memcached][:packages] = %w{ memcached }
 default[:memcached][:service_action] = [:enable, :start]
 
 ## Nginx
+default[:nginx][:packages] = %w{ nginx }
+default[:nginx][:service_action] = [:enable, :start]
 default[:nginx][:config][:user] = 'nginx'
 default[:nginx][:config][:group] = 'nginx'
 default[:nginx][:config][:worker_processes] = '2'
@@ -9,6 +12,8 @@ default[:nginx][:config][:client_max_body_size] = '4M'
 default[:nginx][:config][:proxy_read_timeout] = '90'
 
 ## PHP
+default[:php][:packages] = %w{ php54 php54-cli php54-fpm php54-devel php54-mbstring php54-gd php-pear php54-xml php54-mcrypt php54-mysqlnd php54-pdo php54-pecl-apc php54-pecl-memcache }
+default[:php][:service_action] = [:enable, :start]
 default[:php][:config][:user] = 'nginx'
 default[:php][:config][:group] = 'nginx'
 default[:php][:config][:max_children] = '5'
@@ -22,7 +27,13 @@ default[:php][:config][:request_terminate_timeout] = node[:nginx][:config][:prox
 default[:php][:config][:max_execution_time] = node[:nginx][:config][:proxy_read_timeout]
 
 ## MySQL
+default[:mysql][:packages] = %w{ Percona-Server-server-55 Percona-Server-client-55 Percona-Server-shared-compat }
+if ['redhat'].include?(node[:platform])
+  default[:mysql][:packages] = %w{ Percona-Server-server-55 Percona-Server-client-55 }
+end
+default[:mysql][:service_action] = [:enable, :start]
 default[:mysql][:config][:user] = 'mysql'
+default[:mysql][:config][:group] = 'mysql'
 default[:mysql][:config][:innodb_buffer_pool_size] = '64M'
 default[:mysql][:config][:innodb_log_file_size] = '16M'
 default[:mysql][:config][:query_cache_size] = '64M'

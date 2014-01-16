@@ -1,10 +1,33 @@
+# Percona install
+
+cookbook_file "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm" do
+  source "percona-release-0.0-1.x86_64.rpm"
+end
+
+package "percona-release" do
+  source "#{Chef::Config[:file_cache_path]}/percona-release-0.0-1.x86_64.rpm"
+  action :install
+  provider Chef::Provider::Package::Rpm
+  ignore_failure true
+end
+
+node[:mysql][:packages].each do |package_name|
+  yum_package package_name do
+    action [:install, :upgrade]
+    if ['redhat'].include?(node[:platform])
+      flush_cache [:before]
+    end
+  end
+end
+
+
 # configure mysql
 
 directory '/var/run/mysqld' do
   action :create
   mode '0700'
-  owner 'mysql'
-  group 'mysql'
+  owner node[:mysql][:config][:user]
+  group node[:mysql][:config][:group]
 end
 
 template "/etc/my.cnf" do
@@ -14,7 +37,7 @@ template "/etc/my.cnf" do
 end
 
 service "mysql" do
-  action [:enable, :start]
+  action node[:mysql][:service_action]
 end
 
 ## check innodb_log_file_size
