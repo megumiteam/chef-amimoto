@@ -24,7 +24,7 @@ end
 
 node[:monit][:settings][:processes].each do |monit|
   template ::File.join(node[:monit][:config_dir], monit[:name]) do
-    source 'monit/process_monitor.erb'
+    source node[:monit][:source][monit[:name]]
     variables monit
     notifies :reload, 'service[monit]'
   end

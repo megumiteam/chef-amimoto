@@ -21,7 +21,7 @@ template "/etc/php-fpm.d/www.conf" do
   notifies :reload, 'service[php-fpm]'
 end
 
-%w{ /var/tmp/php/session /var/log/php-fpm }.each do | dir_name |
+%w{ /var/tmp/php /var/tmp/php/session /var/log/php-fpm }.each do | dir_name |
   directory dir_name do
     owner node[:php][:config][:user]
     group node[:php][:config][:group]

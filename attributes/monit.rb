@@ -2,12 +2,21 @@ default[:monit][:config_file]    = '/etc/monit.conf'
 default[:monit][:config_dir]     = '/etc/monit.d'
 default[:monit][:config][:alert] = []
 
+default[:monit][:source] = {
+  'nginx'   => 'monit/process_monitor.erb',
+  'php-fpm' => 'monit/php-fpm.erb',
+  'mysql'   => 'monit/process_monitor.erb',
+  'crond'   => 'monit/process_monitor.erb',
+}
+
 default[:monit][:settings][:processes] = [
   {
    :name => 'nginx',
    :pidfile => '/var/run/nginx.pid',
    :start => '/sbin/service nginx start',
    :stop  => '/sbin/service nginx stop',
+   :user  => node[:nginx][:config][:user],
+   :group => node[:nginx][:config][:group],
    :rules => [
    ]
   },
@@ -16,6 +25,8 @@ default[:monit][:settings][:processes] = [
    :pidfile => '/var/run/php-fpm/php-fpm.pid',
    :start => '/sbin/service php-fpm start',
    :stop  => '/sbin/service php-fpm stop',
+   :user  => node[:php][:config][:user],
+   :group => node[:php][:config][:group],
    :rules => [
    ]
   },
@@ -24,6 +35,8 @@ default[:monit][:settings][:processes] = [
    :pidfile => '/var/run/mysqld/mysqld.pid',
    :start => '/sbin/service mysql start',
    :stop  => '/sbin/service mysql stop',
+   :user  => node[:mysql][:config][:user],
+   :group => node[:mysql][:config][:group],
    :rules => [
    ]
   },
