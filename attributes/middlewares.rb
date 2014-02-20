@@ -10,6 +10,8 @@ default[:nginx][:config][:group] = 'nginx'
 default[:nginx][:config][:worker_processes] = '2'
 default[:nginx][:config][:client_max_body_size] = '4M'
 default[:nginx][:config][:proxy_read_timeout] = '90'
+default[:nginx][:config][:worker_rlimit_nofile] = '10240'
+default[:nginx][:config][:worker_connections] = '8192'
 
 ## PHP
 default[:php][:packages] = %w{ php54 php54-cli php54-fpm php54-devel php54-mbstring php54-gd php-pear php54-xml php54-mcrypt php54-mysqlnd php54-pdo php54-pecl-apc php54-pecl-memcache }
