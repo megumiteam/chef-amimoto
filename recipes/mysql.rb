@@ -36,6 +36,18 @@ template "/etc/my.cnf" do
   notifies :reload, 'service[mysql]' unless node.run_state[:mysql_flush_ib_logfiles]
 end
 
+file "/var/log/mysqld-slow.log" do
+  owner node[:mysql][:config][:user]
+  group "root"
+  mode "0640"
+  action :create
+end
+
+template "/etc/logrotate.d/mysql" do
+  variables node[:mysql][:config]
+  source "logrotat.d/mysql.erb"
+end
+
 service "mysql" do
   action node[:mysql][:service_action]
 end
