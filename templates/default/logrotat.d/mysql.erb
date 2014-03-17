@@ -1,10 +1,10 @@
-/var/log/mysqld* {
-        # create 600 mysql mysql
-        notifempty
-        daily
-        rotate 5
-        missingok
-        compress
+/var/log/mysqld.log {
+    # create 600 mysql mysql
+    notifempty
+    daily
+    rotate 5
+    missingok
+    compress
     postrotate
         # just if mysqld is really running
         if test -x /usr/bin/mysqladmin && \
@@ -12,5 +12,16 @@
         then
            /usr/bin/mysqladmin flush-logs
         fi
+    endscript
+}
+
+/var/log/mysqld-slow.log {
+    # create 600 mysql mysql
+    notifempty
+    daily
+    rotate 5
+    missingok
+    compress
+    postrotate
     endscript
 }
