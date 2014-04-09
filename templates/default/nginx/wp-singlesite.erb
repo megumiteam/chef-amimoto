@@ -40,6 +40,11 @@ location ~ \.php$ {
 
     try_files $uri =404;
 
+    set $proxy_https '';
+    if ( $http_x_forwarded_proto = 'https' ) {
+        set $proxy_https 'on';
+    }
+
     expires        off;
     fastcgi_split_path_info ^(.+\.php)(/.+)$;
     fastcgi_pass   phpfpm;
@@ -55,6 +60,7 @@ location ~ \.php$ {
     fastcgi_busy_buffers_size 256k;
     fastcgi_temp_file_write_size 256k;
     fastcgi_param  REMOTE_ADDR      $http_x_real_ip;
+    fastcgi_param  HTTPS            $proxy_https  if_not_empty;
     fastcgi_pass_header "X-Accel-Redirect";
     fastcgi_pass_header "X-Accel-Buffering";
     fastcgi_pass_header "X-Accel-Charset";

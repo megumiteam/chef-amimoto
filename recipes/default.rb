@@ -14,7 +14,7 @@ template "/etc/sysconfig/i18n" do
   source "i18n.erb"
 end
 
-%w{ zip unzip wget git }.each do | pkg |
+%w{ zip unzip wget git openssl }.each do | pkg |
   package pkg do
     action [:install, :upgrade]
   end
