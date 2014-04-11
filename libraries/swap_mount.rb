@@ -1,18 +1,9 @@
-require 'ohai'
+include Chef::Mixin::ShellOut
 
-ohai = Ohai::System.new
-ohai.all_plugins
-
-if ohai.has_key?('ec2')
-  if ['t1.micro'].include?(ohai.ec2[:instance_type])
-    include Chef::Mixin::ShellOut
-
-    unless ::File.exist?('/swapfile')
-      Chef::Log.info "Create Swapfile"
-      system('dd if=/dev/zero of=/swapfile bs=1024 count=2097152 && mkswap /swapfile')
-      system('swapon /swapfile')
-    end
-  end
+unless ::File.exist?('/swapfile')
+  Chef::Log.info "Create Swapfile"
+  system('dd if=/dev/zero of=/swapfile bs=1024 count=2097152 && mkswap /swapfile')
+  system('swapon /swapfile')
 end
 
 def mount_swap_file
