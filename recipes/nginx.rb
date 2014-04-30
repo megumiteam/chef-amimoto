@@ -34,7 +34,7 @@ end
   end
 end
 
-%W{ /var/cache/nginx /var/log/nginx /var/www/vhosts/#{node[:ec2][:instance_id]} }.each do | dir_name |
+%W{ /var/cache/nginx /var/log/nginx /var/lib/nginx /var/tmp/nginx /var/www/vhosts/#{node[:ec2][:instance_id]} }.each do | dir_name |
   directory dir_name do
     owner node[:nginx][:config][:user]
     group node[:nginx][:config][:group]

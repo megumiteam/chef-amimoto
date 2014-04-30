@@ -3,7 +3,7 @@ default[:monit][:config_dir]     = '/etc/monit.d'
 default[:monit][:config][:alert] = []
 
 default[:monit][:source] = {
-  'nginx'   => 'monit/process_monitor.erb',
+  'nginx'   => 'monit/nginx.erb',
   'php-fpm' => 'monit/php-fpm.erb',
   'mysql'   => 'monit/process_monitor.erb',
   'crond'   => 'monit/process_monitor.erb',
