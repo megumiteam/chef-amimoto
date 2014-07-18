@@ -77,6 +77,8 @@ http {
     proxy_cache_use_stale timeout invalid_header http_500 http_502 http_503 http_504;
     proxy_cache_lock on;
     proxy_cache_lock_timeout 5s;
+    proxy_buffers 8 32k;
+    proxy_buffer_size 64k;
 
     # fastcgi cache
     #fastcgi_cache_path /var/cache/nginx/fastcgi_cache levels=1:2
