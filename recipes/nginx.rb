@@ -17,7 +17,7 @@ template "/etc/nginx/nginx.conf" do
   notifies :reload, 'service[nginx]'
 end
 
-%w{ drop expires mobile-detect phpmyadmin wp-multisite-subdir wp-singlesite }.each do | file_name |
+%w{ drop expires mobile-detect phpmyadmin php-fpm wp-multisite-subdir wp-singlesite }.each do | file_name |
   template "/etc/nginx/" + file_name do
     source "nginx/" + file_name + ".erb"
     notifies :reload, 'service[nginx]'
