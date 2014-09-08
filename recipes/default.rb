@@ -39,5 +39,5 @@ include_recipe 'amimoto::php'
 # install monit
 include_recipe 'amimoto::monit'
 
-# install wp-cli
-include_recipe 'amimoto::wpcli'
+## install wp-cli
+#include_recipe 'amimoto::wpcli'
