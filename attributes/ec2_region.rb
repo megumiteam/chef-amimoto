@@ -9,8 +9,6 @@ tztable = {
 }
 
 
-default[:ec2][:region] = node[:ec2][:placement_availability_zone].chop
-
-
-default[:timezone] = tztable[node[:ec2][:region]] || "UTC"
+default[:ec2][:region] = "ap-northeast-1"
+default[:timezone] = "Asia/Tokyo"
 
