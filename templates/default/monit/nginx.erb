@@ -11,7 +11,7 @@ check process <%= @name %>
 <% end %>
 
 check directory nginx_cache with path "/var/cache/nginx"
-  if failed uid <%= @user %> then exec "/bin/chown -R <%= @user %>:<%= @group %> /var/cach/nginx"
+  if failed uid <%= @user %> then exec "/bin/chown -R <%= @user %>:<%= @group %> /var/cache/nginx"
 
 check directory nginx_lib with path "/var/lib/nginx"
   if failed uid <%= @user %> then exec "/bin/chown -R <%= @user %>:<%= @group %> /var/lib/nginx"
