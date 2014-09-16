@@ -24,11 +24,6 @@ server {
         set $do_not_cache 1;
     }
 
-    #location ~* \.(js|css|html?|xml|gz|jpe?g|gif|png|swf|wmv|flv|ico)$ {
-    #    index   index.html index.htm;
-    #    include /etc/nginx/expires;
-    #}
-
     location / {
         try_files $uri @wordpress;
 
@@ -52,6 +47,10 @@ server {
         proxy_pass http://backend;
     }
 
+<% if @phpmyadmin_enable %>
+    # phpMyAdmin
+    include     /etc/nginx/phpmyadmin;
+<% else %>
     #
     # When you use phpMyAdmin, uncomment the line "include /etc/nginx/phpmyadmin;"
     # and delete or comment out the below line "location ~* /(phpmyadmin|myadmin|pma) { }".
@@ -62,6 +61,7 @@ server {
         log_not_found off;
         return 404;
     }
+<% end %>
 
     #
     # redirect server error pages to the static page /50x.html
