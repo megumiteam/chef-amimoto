@@ -22,6 +22,7 @@ default[:php][:packages] = %w{ php54 php54-cli php54-fpm php54-devel php54-mbstr
 default[:php][:service_action] = [:enable, :start]
 default[:php][:config][:user] = 'nginx'
 default[:php][:config][:group] = 'nginx'
+default[:php][:config][:listen_backlog] = '65536'
 default[:php][:config][:max_children] = '5'
 default[:php][:config][:start_servers] = '1'
 default[:php][:config][:min_spare_servers] = '1'
