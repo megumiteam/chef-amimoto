@@ -36,7 +36,7 @@ end
   end
 end
 
-%W{ /var/cache/nginx /var/log/nginx /var/lib/nginx /var/tmp/nginx /var/www/vhosts/#{node[:ec2][:instance_id]} }.each do | dir_name |
+%W{ /var/cache/nginx /var/log/nginx /var/lib/nginx /var/tmp/nginx /opt/local/amimoto /opt/local/amimoto/wp-admin /var/www/vhosts/#{node[:ec2][:instance_id]} }.each do | dir_name |
   directory dir_name do
     owner node[:nginx][:config][:user]
     group node[:nginx][:config][:group]
@@ -44,6 +44,13 @@ end
     recursive true
     action :create
   end
+end
+
+template "/opt/local/amimoto/wp-admin/install.php" do
+  variables(
+    :instance_id => node[:ec2][:instance_id]
+  )
+  source "install.php.erb"
 end
 
 service "nginx" do
